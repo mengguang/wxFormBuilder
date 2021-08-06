@@ -64,7 +64,7 @@ ECHO                        Example: --wx-version=2.9
 ECHO                        Default: %wxver%
 ECHO.
 ECHO --force-wx-config      Force wx-config for the configuration
-ECHO                        even under MS Windows (usefull when CodeLite IDE
+ECHO                        even under MS Windows (useful when CodeLite IDE
 ECHO                        is used for the building)
 ECHO                        Default: Don't use wx-config under MS Windows
 ECHO.
@@ -121,16 +121,16 @@ SHIFT
 GOTO Loop
 
 :Premake
-build\premake\4.3\bin\release\premake4.exe --file=build/premake/solution.lua --wx-root=%wxroot% --wx-version=%wxver% --compiler=%compiler% %compilerversion% %architecture% %shared% %monolithic% %mediactrl% %usewxconfig% codelite
+scripts\premake\4.3\bin\release\premake4.exe --file=scripts/premake/solution.lua --wx-root=%wxroot% --wx-version=%wxver% --compiler=%compiler% %compilerversion% %architecture% %shared% %monolithic% %mediactrl% %usewxconfig% codelite
 ECHO.
 
-build\premake\4.3\bin\release\premake4.exe --file=build/premake/solution.lua --wx-root=%wxroot% --wx-version=%wxver% --compiler=%compiler% %compilerversion% %architecture% %shared% %monolithic% %mediactrl% %usewxconfig% gmake
+scripts\premake\4.3\bin\release\premake4.exe --file=scripts/premake/solution.lua --wx-root=%wxroot% --wx-version=%wxver% --compiler=%compiler% %compilerversion% %architecture% %shared% %monolithic% %mediactrl% %usewxconfig% gmake
 ECHO.
 
-build\premake\4.3\bin\release\premake4.exe --file=build/premake/solution.lua --wx-root=%wxroot% --wx-version=%wxver% --compiler=%compiler% %compilerversion% %architecture% %shared% %monolithic% %mediactrl% %usewxconfig% codeblocks
+scripts\premake\4.3\bin\release\premake4.exe --file=scripts/premake/solution.lua --wx-root=%wxroot% --wx-version=%wxver% --compiler=%compiler% %compilerversion% %architecture% %shared% %monolithic% %mediactrl% %usewxconfig% codeblocks
 ECHO.
 
-build\premake\4.3\bin\release\premake4.exe --file=build/premake/solution.lua --wx-root=%wxroot% --wx-version=%wxver% --compiler=%compiler% %compilerversion% %architecture% %shared% %monolithic% %mediactrl% %usewxconfig% vs2010
+scripts\premake\4.3\bin\release\premake4.exe --file=scripts/premake/solution.lua --wx-root=%wxroot% --wx-version=%wxver% --compiler=%compiler% %compilerversion% %architecture% %shared% %monolithic% %mediactrl% %usewxconfig% vs2010
 ECHO.
 
 ECHO Done generating all project files for wxFormBuilder.

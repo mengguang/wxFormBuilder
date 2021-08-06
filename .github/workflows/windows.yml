@@ -35,17 +35,11 @@ jobs:
       run: |
         cd build/3.0/gmake
         sed 's!\$(LDFLAGS) \$(RESOURCES) \$(ARCH) \$(LIBS)!\$(LIBS) \$(LDFLAGS) \$(RESOURCES) \$(ARCH)!g' *.make -i
-        sed 's!-lbfd!-lbfd -lz!g' *.make -i
     - name: Build
       shell: msys2 {0}
       run: |
         cd build/3.0/gmake
         make config=release
-    - name: Create source package
-      shell: cmd
-      run: |
-        cd install/windows
-        create_source_package.bat
     - name: Create installer
       shell: cmd
       run: '"C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe" install/windows/wxFormBuilder.iss'
@@ -53,4 +47,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Windows
-        path: install\windows\wxFormBuilder_v3.9.0.exe
+        path: install\windows\wxFormBuilder-*.exe

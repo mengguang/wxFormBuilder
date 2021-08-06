@@ -229,12 +229,20 @@ class RichTextCtrlComponent : public ComponentBase
 {
 public:
 	wxObject* Create(IObject* obj, wxObject* parent) override {
+
+		wxString text = obj->GetPropertyAsString(_("value"));
+
 		wxRichTextCtrl* richText = new wxRichTextCtrl( 	(wxWindow*)parent,
 															wxID_ANY,
-															wxEmptyString,
+															text,
 															obj->GetPropertyAsPoint(_("pos")),
 															obj->GetPropertyAsSize(_("size")),
 															obj->GetPropertyAsInteger(_("style")) | obj->GetPropertyAsInteger(_("window_style")));
+
+		if (!text.empty())
+		{
+			return richText;
+		}
 
 		wxFont textFont = wxFont(12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 		wxFont boldFont = wxFont(12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
@@ -370,14 +378,16 @@ public:
 	}
 
 	ticpp::Element* ExportToXrc(IObject* obj) override {
-		ObjectToXrcFilter xrc(obj, _("unknown"), obj->GetPropertyAsString(_("name")));
-		//xrc.AddWindowProperties();
+		ObjectToXrcFilter xrc(obj, _("wxRichTextCtrl"), obj->GetPropertyAsString(_("name")));
+		xrc.AddWindowProperties();
+		xrc.AddProperty(_("value"), _("value"), XRC_TYPE_TEXT);
 		return xrc.GetXrcObject();
 	}
 
 	ticpp::Element* ImportFromXrc(ticpp::Element* xrcObj) override {
 		XrcToXfbFilter filter(xrcObj, _("wxRichTextCtrl"));
 		filter.AddWindowProperties();
+		filter.AddProperty(_("value"), _("value"), XRC_TYPE_TEXT);
 		return filter.GetXfbObject();
 	}
 };
@@ -914,12 +924,16 @@ public:
 
 		// Label Properties
 		grid->SetColLabelAlignment( obj->GetPropertyAsInteger( _("col_label_horiz_alignment") ), obj->GetPropertyAsInteger( _("col_label_vert_alignment") ) );
-		grid->SetColLabelSize( obj->GetPropertyAsInteger( _("col_label_size") ) );
 
 		wxArrayString columnLabels = obj->GetPropertyAsArrayString( _("col_label_values") );
 		for ( int i = 0; i < (int)columnLabels.size() && i < grid->GetNumberCols(); ++i )
 		{
 			grid->SetColLabelValue( i, columnLabels[i] );
+		}
+
+		if ( !obj->IsNull( _("col_label_size") ) )
+		{
+			grid->SetColLabelSize( obj->GetPropertyAsInteger( _("col_label_size") ) );
 		}
 
 		wxArrayInt columnSizes = obj->GetPropertyAsArrayInt( _("column_sizes") );
@@ -929,12 +943,16 @@ public:
 		}
 
 		grid->SetRowLabelAlignment( obj->GetPropertyAsInteger( _("row_label_horiz_alignment") ), obj->GetPropertyAsInteger( _("row_label_vert_alignment") ) );
-		grid->SetRowLabelSize( obj->GetPropertyAsInteger( _("row_label_size") ) );
 
 		wxArrayString rowLabels = obj->GetPropertyAsArrayString( _("row_label_values") );
 		for ( int i = 0; i < (int)rowLabels.size() && i < grid->GetNumberRows(); ++i )
 		{
 			grid->SetRowLabelValue( i, rowLabels[i] );
+		}
+
+		if ( !obj->IsNull( _("row_label_size") ) )
+		{
+			grid->SetRowLabelSize( obj->GetPropertyAsInteger( _("row_label_size") ) );
 		}
 
 		wxArrayInt rowSizes = obj->GetPropertyAsArrayInt( _("row_sizes") );
@@ -1256,7 +1274,7 @@ public:
 
 	ticpp::Element* ImportFromXrc(ticpp::Element* xrcObj) override {
 		XrcToXfbFilter filter(xrcObj, _("wxFilePickerCtrl"));
-		filter.AddProperty(_("value"),_("value"),XRC_TYPE_FONT);
+		filter.AddProperty(_("value"),_("value"),XRC_TYPE_TEXT);
 		filter.AddProperty(_("message"),_("message"),XRC_TYPE_TEXT);
 		filter.AddProperty(_("wildcard"),_("wildcard"),XRC_TYPE_TEXT);
 		filter.AddWindowProperties();
@@ -1310,7 +1328,7 @@ public:
 
 	ticpp::Element* ImportFromXrc(ticpp::Element* xrcObj) override {
 		XrcToXfbFilter filter(xrcObj, _("wxDirPickerCtrl"));
-		filter.AddProperty(_("value"),_("value"),XRC_TYPE_FONT);
+		filter.AddProperty(_("value"),_("value"),XRC_TYPE_TEXT);
 		filter.AddProperty(_("message"),_("message"),XRC_TYPE_TEXT);
 		filter.AddWindowProperties();
 		return filter.GetXfbObject();
@@ -1448,6 +1466,10 @@ public:
 		ObjectToXrcFilter xrc(obj, obj->GetPropertyAsString(_("class")), obj->GetPropertyAsString(_("name")));
 		return xrc.GetXrcObject();
 	}
+};
+
+class CustomCodeComponent : public ComponentBase
+{
 };
 
 class SearchCtrlComponent : public ComponentBase
@@ -2651,6 +2673,7 @@ WINDOW_COMPONENT("wxScrollBar",ScrollBarComponent)
 WINDOW_COMPONENT("wxSpinCtrl",SpinCtrlComponent)
 WINDOW_COMPONENT("wxSpinButton",SpinButtonComponent)
 WINDOW_COMPONENT("CustomControl", CustomControlComponent)
+ABSTRACT_COMPONENT("CustomCode", CustomCodeComponent)
 WINDOW_COMPONENT("wxDataViewCtrl", DataViewCtrl )
 WINDOW_COMPONENT("wxDataViewTreeCtrl", DataViewTreeCtrl )
 WINDOW_COMPONENT("wxDataViewListCtrl", DataViewListCtrl )
@@ -2786,6 +2809,7 @@ MACRO(wxALIGN_CENTER)
 MACRO(wxALIGN_RIGHT)
 MACRO(wxALIGN_TOP)
 MACRO(wxALIGN_BOTTOM)
+MACRO(wxGRID_AUTOSIZE)
 
 // wxScrollBar
 MACRO(wxSB_HORIZONTAL)

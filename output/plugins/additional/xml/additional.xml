@@ -51,6 +51,7 @@ Written by
       <option name="wxTE_READONLY" help="The text will not be user-editable."/>
       <option name="wxTE_AUTO_URL" help="Highlight the URLs and generate the wxTextUrl events when mouse events occur over them."/>
     </property>
+    <property name="value" type="wxString_i18n"/>
     <event name="OnText" class="wxCommandEvent" help="Respond to a wxEVT_COMMAND_TEXT_UPDATED event, generated when the text changes. Notice that this event will always be sent when the text controls contents changes - whether this is due to user input or comes from the program itself (for example, if SetValue() is called)"/>
     <event name="OnTextEnter" class="wxCommandEvent" help="Respond to a wxEVT_COMMAND_TEXT_ENTER event, generated when enter is pressed in a text control (which must have wxTE_PROCESS_ENTER style for this event to be generated)."/>
     <event name="OnTextURL" class="wxTextUrlEvent" help="A mouse event occurred over an URL in the text control (wxMSW and wxGTK2 only)"/>
@@ -79,6 +80,7 @@ Written by
     <property name="view_whitespace" type="bool" help="Show whitespace characters.">0</property>
     <property name="use_tabs" type="bool" help="Use tabs for indenting, instead of spaces.">1</property>
     <property name="tab_width" type="text" help="The number of spaces per tab character.">4</property>
+    <property name="read_only" type="bool" help="Set ReadOnly Mode. Disable editing.">0</property>
   </objectinfo>
 
   <objectinfo class="wxToggleButton" startgroup="1" icon="toggle_button.xpm" type="widget">
@@ -415,7 +417,27 @@ Written by
     <property name="settings" type="text" help="Code to generate for the settings of this control."/>
   </objectinfo>
 
-  <objectinfo class="wxTimer" startgroup="1" icon="timer.xpm" type="nonvisual">
+  <objectinfo class="CustomCode" startgroup="1" icon="customcode.xpm" type="nonvisual">
+    <property name="name" type="text" help="Informal name, this is not used in the generated file and therefor doesn't need to be unique">MyCode</property>
+    <category name="C++">
+      <property name="include_cpp" type="text" help="Optional include directive for c++"></property>
+      <property name="code_cpp" type="text" help="This custom code fragment gets inserted as is at the current position into the generated c++ file"></property>
+    </category>
+    <category name="Python">
+      <property name="import_python" type="text" help="Optional import directive for python"></property>
+      <property name="code_python" type="text" help="This custom code fragment gets inserted as is at the current position into the generated python file"></property>
+    </category>
+    <category name="PHP">
+      <property name="require_php" type="text" help="Optional require directive for php"></property>
+      <property name="code_php" type="text" help="This custom code fragment gets inserted as is at the current position into the generated php file"></property>
+    </category>
+    <category name="Lua">
+      <property name="require_lua" type="text" help="Optional require directive for lua"></property>
+      <property name="code_lua" type="text" help="This custom code fragment gets inserted as is at the current position into the generated lua file"></property>
+    </category>
+  </objectinfo>
+
+  <objectinfo class="wxTimer" icon="timer.xpm" type="nonvisual">
     <property name="name" type="text" help="wxTimer object name.">m_timer</property>
     <property name="id" type="macro" help="Timer identifier.">wxID_ANY</property>
     <property name="period" type="int" help="Timer period in milliseconds.">1000</property>

@@ -21,7 +21,7 @@
 //   José Antonio Hurtado - joseantonio.hurtado@gmail.com
 //   Juan Antonio Ortega  - jortegalalmolda@gmail.com
 //
-// Python code generation writen by
+// Python code generation written by
 //   Michal Bližňak - michal.bliznak@gmail.com
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -716,7 +716,7 @@ void PythonCodeGenerator::GenVirtualEventHandlers( const EventVector& events, co
 		// execute properly.
 		// So we create a default handler which will skip the event.
 		m_source->WriteLn( wxEmptyString );
-		m_source->WriteLn( wxT("# Virtual event handlers, overide them in your derived class") );
+		m_source->WriteLn( wxT("# Virtual event handlers, override them in your derived class") );
 
 		std::set<wxString> generatedHandlers;
 		for ( size_t i = 0; i < events.size(); i++ )
@@ -1139,6 +1139,13 @@ void PythonCodeGenerator::GenConstructor(PObjectBase class_obj, const EventVecto
 
 	GenEvents( class_obj, events );
 
+	auto afterConnectEvents = GetCode(class_obj, wxT("after_connectevents"));
+	if (!afterConnectEvents.empty())
+	{
+		m_source->WriteLn();
+		m_source->WriteLn(afterConnectEvents);
+	}
+
 	m_source->Unindent();
 
 	if ( class_obj->GetObjectTypeName() == wxT("wizard") && class_obj->GetChildCount() > 0 )
@@ -1456,7 +1463,7 @@ void PythonCodeGenerator::GenDefines( PObjectBase project)
 	std::vector< wxString > macros;
 	FindMacros( project, &macros );
 
-	// Remove the default macro from the set, for backward compatiblity
+	// Remove the default macro from the set, for backward compatibility
 	std::vector< wxString >::iterator it;
 	it = std::find( macros.begin(), macros.end(), wxT("ID_DEFAULT") );
 	if ( it != macros.end() )
@@ -1729,6 +1736,7 @@ void PythonTemplateParser::SetupModulePrefixes()
 	// altered class names
 	ADD_PREDEFINED_PREFIX( wxCalendarCtrl, wx.adv. );
 	ADD_PREDEFINED_PREFIX( wxRichTextCtrl, wx.richtext. );
+	ADD_PREDEFINED_PREFIX( wxStyledTextCtrl, wx.stc. );
 	ADD_PREDEFINED_PREFIX( wxHtmlWindow, wx.html. );
 	ADD_PREDEFINED_PREFIX( wxAuiNotebook, wx.aui. );
 	ADD_PREDEFINED_PREFIX( wxGrid, wx.grid. );
@@ -1736,6 +1744,7 @@ void PythonTemplateParser::SetupModulePrefixes()
 	ADD_PREDEFINED_PREFIX( wxDatePickerCtrl, wx.adv. );
 	ADD_PREDEFINED_PREFIX( wxTimePickerCtrl, wx.adv. );
 	ADD_PREDEFINED_PREFIX( wxHyperlinkCtrl, wx.adv. );
+	ADD_PREDEFINED_PREFIX( wxMediaCtrl, wx.media. );
 
 	// altered macros
 	ADD_PREDEFINED_PREFIX( wxCAL_SHOW_HOLIDAYS, wx.adv. );
@@ -1796,6 +1805,8 @@ void PythonTemplateParser::SetupModulePrefixes()
 	ADD_PREDEFINED_PREFIX( wxAUI_MGR_LIVE_RESIZE, wx.aui. );
 	ADD_PREDEFINED_PREFIX( wxAUI_MGR_DEFAULT, wx.aui. );
 
+	ADD_PREDEFINED_PREFIX( wxGRID_AUTOSIZE, wx.grid. );
+
 	ADD_PREDEFINED_PREFIX( wxAC_DEFAULT_STYLE, wx.adv. );
 	ADD_PREDEFINED_PREFIX( wxAC_NO_AUTORESIZE, wx.adv. );
 
@@ -1844,14 +1855,14 @@ void PythonTemplateParser::SetupModulePrefixes()
 	ADD_PREDEFINED_PREFIX( wxPG_TOOLBAR, wx.propgrid. );
 	ADD_PREDEFINED_PREFIX( wxPGMAN_DEFAULT_STYLE, wx.propgrid. );
 	ADD_PREDEFINED_PREFIX( wxPG_NO_INTERNAL_BORDER, wx.propgrid. );
-	
+
 	ADD_PREDEFINED_PREFIX( wxDATAVIEW_CELL_ACTIVATABLE, wx.dataview. );
 	ADD_PREDEFINED_PREFIX( wxDATAVIEW_CELL_INERT, wx.dataview. );
 	ADD_PREDEFINED_PREFIX( wxDATAVIEW_COL_HIDDEN, wx.dataview. );
 	ADD_PREDEFINED_PREFIX( wxDATAVIEW_COL_REORDERABLE, wx.dataview. );
 	ADD_PREDEFINED_PREFIX( wxDATAVIEW_COL_RESIZABLE, wx.dataview. );
 	ADD_PREDEFINED_PREFIX( wxDATAVIEW_COL_SORTABLE, wx.dataview. );
-	
+
 	ADD_PREDEFINED_PREFIX( wxDV_SINGLE, wx.dataview. );
 	ADD_PREDEFINED_PREFIX( wxDV_MULTIPLE, wx.dataview. );
 	ADD_PREDEFINED_PREFIX( wxDV_ROW_LINES, wx.dataview. );
@@ -1875,4 +1886,3 @@ void PythonTemplateParser::SetupModulePrefixes()
 
 	ADD_PREDEFINED_PREFIX( wxTP_DEFAULT, wx.adv. );
 }
-

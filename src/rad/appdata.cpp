@@ -55,6 +55,10 @@
 using namespace TypeConv;
 
 
+const char* const VERSION = "3.9.0";
+const char* const REVISION = "";
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // Comandos
 ///////////////////////////////////////////////////////////////////////////////
@@ -1402,7 +1406,7 @@ bool ApplicationData::ConvertProject(ticpp::Document& doc, const wxString& path,
 			// underneath the root element
 			std::unique_ptr<ticpp::Node> objectTree = root->Clone();
 
-			// Clear the document to add the declatation and the root element
+			// Clear the document to add the declaration and the root element
 			doc.Clear();
 
 			// Add the declaration
@@ -1653,7 +1657,7 @@ void ApplicationData::ConvertObject( ticpp::Element* parent, int fileMajor, int 
 		}
 
 		// The 'style' property used to have both wxWindow styles and the styles of the specific controls
-		// now it only has the styles of the specfic controls, and wxWindow styles are saved in window_style
+		// now it only has the styles of the specific controls, and wxWindow styles are saved in window_style
 		// This also applies to 'extra_style', which was once combined with 'style'.
 		// And they were named 'WindowStyle' and one point, too...
 
@@ -2213,6 +2217,19 @@ void ApplicationData::ConvertObject( ticpp::Element* parent, int fileMajor, int 
 	}
 
 	/* The file is now at least version 1.15 */
+	if (fileMajor < 1 || (fileMajor == 1 && fileMinor < 16))
+	{
+		static bool showRemovalWarnings = true;
+		if (objClass == "wxMenuBar")
+		{
+			RemoveProperties(parent, std::set<std::string>{"label"});
+			if (showRemovalWarnings)
+			{
+				wxLogMessage(_("Removed property label for class wxMenuBar because it is no longer used"));
+				showRemovalWarnings = false;
+			}
+		}
+	}
 }
 
 void ApplicationData::GetPropertiesToConvert( ticpp::Node* parent, const std::set< std::string >& names, std::set< ticpp::Element* >* properties )
