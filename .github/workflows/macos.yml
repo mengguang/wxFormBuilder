@@ -24,7 +24,7 @@ jobs:
     - name: Run app bundle
       run: |
         cd output
-        open wxFormBuilder.app
+        wxFormBuilder.app/Contents/MacOS/wxformbuilder
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
