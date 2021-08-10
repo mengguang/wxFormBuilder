@@ -53,6 +53,8 @@ fi
 
 dylibbundler -od -b -d $PROJECT_ROOT/output/wxFormBuilder.app/Contents/libs/ $FILES
 
+codesign --verify --verbose "$PROJECT_ROOT/output/wxFormBuilder.app/Contents/MacOS/wxformbuilder"
+
 #Work around the likely bug in dylibbundler leading in copying two exemplars of the same dylib with different names instead of creating symlinks or changing the dependency name in the depending binaries
 pushd $PROJECT_ROOT/output/wxFormBuilder.app/Contents/libs/
 wx_version="$(wx-config --version|cut -c1-3)"
@@ -61,6 +63,10 @@ for lib in $(ls libwx_*.dylib); do
   if [[ "${lib}" != "${lib_basename}-${wx_version}.dylib" ]] && [ -f "${lib_basename}-${wx_version}.dylib" ]; then
     rm -f "${lib_basename}-${wx_version}.dylib"
     ln -sf "${lib}" "${lib_basename}-${wx_version}.dylib"
+  fi
+
+  if [[ -f "$lib" ]]; then
+    codesign --verify --verbose "$lib"
   fi
 done
 popd > /dev/null
