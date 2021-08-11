@@ -73,3 +73,6 @@ popd > /dev/null
 
 # Sign the contents of the app bundle, dylibbundler modified pretty much all binaries and libraries
 codesign -s - -f --deep --verbose "$PROJECT_ROOT/output/wxFormBuilder.app"
+
+# Verify app bundle signature
+codesign --verify --deep --verbose "$PROJECT_ROOT/output/wxFormBuilder.app"
